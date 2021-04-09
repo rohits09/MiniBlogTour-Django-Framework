@@ -1,0 +1,31 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="col-sm-5 offset-3">
+        <h3 class="mt-5">LOGIN</h3>
+        <hr class="bg-light">
+        <div class="my-5">
+            <form action="" method="post" novalidate>
+                {% csrf_token %}
+                {% if lfform %}
+                    <div class="form-group">
+                        {% for form in lfform %}
+                            {{ form.label_tag }} {{ form }} <small class="text-warning">{{ form.errors|striptags }}</small> <br>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <button type="submit" class="btn btn-info">Login</button>
+            </form>
+            {% if non_field_errors %}
+                {% for error in non_field_errors %}
+                    <p class="alert alert-danger my-3">{{ error }}</p>
+                {% endfor %}
+            {% endif %}
+            <br>
+            <hr class="bg-light">
+            <a href=" {% url 'signup' %} "><button type="submit" class="btn btn-success">Signup</button></a>
+            <a href=" {% url 'home' %} "><button type="submit" class="btn btn-success">Back To Home</button></a>
+        </div>
+    </div>
+{% endblock content %}

@@ -1,0 +1,66 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block msg %}
+    <div class="text-center my-3">
+        {% for message in messages %}
+            {% if message.tags %}
+                <p class="alert alert-success"><strong>{{ message }}</strong></p>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock msg %}
+
+{% block side %}
+    <div class="col-sm-2 my-5 text-center border-right">
+        <h4 class="mt-2">Profile</h4>
+        <hr class="bg-light">
+        <h5>{{ fname }}</h5>
+        {% for grp in groups %}
+            <p>{{ grp.name }}</p>
+        {% endfor %}
+    </div>
+{% endblock side %}
+
+{% block content %}
+    <div class="col-sm-10">
+        <h2 class="mt-5">DASHBOARD</h3>
+        <hr class="bg-light">
+        <a href=" {% url 'addpost' %} " class="btn btn-success my-3">Add Post</a>
+        <h3 class="text-center bg-primary alert alert-dark">All Posts</h3>
+        {% if post %}
+            <table class="table table-hover bg-light">
+                <thead>
+                    <tr>        
+                        <th scope="col" style="width:2%">ID</th>
+                        <th scope="col" style="width:28%">TITLE</th>
+                        <th scope="col" style="width:55%">DESCRIPTION</th>
+                        <th scope="col" style="width:15%">ACTION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pst in post %}
+                        <tr>
+                            {% if pst.uname == request.user.username %}
+                                <th scope="row"> {{ pst.id }} </th>
+                                <td> {{ pst.title }} </td>
+                                <td> {{ pst.descpt }} </td>
+                                <td> 
+                                <a href=" {% url 'updatepost' pst.id %} " class= "btn btn-warning btn-sm" >Edit</a>
+                                {% if perms.blog.delete_post %}
+                                    <form action=" {% url 'deletepost' pst.id %} " method="post" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class= "btn btn-danger btn-sm" >Delete</button> 
+                                    </form>
+                                {% endif %}
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <h4 class="text-center alert alert-warning">No Records/Post To Show</h4>
+        {% endif %}
+    </div>
+{% endblock content %}
